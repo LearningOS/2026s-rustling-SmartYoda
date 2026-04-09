@@ -4,27 +4,13 @@
 	you can use bubble sorting, insertion sorting, heap sorting, etc.
 */
 fn sort<T: Ord>(array: &mut [T]) {
-    sort(array, 0, array.len() - 1);
-}
-fn sort<T: Ord>(array: &mut [T], left: usize, right: usize) {
-    if left >= right {
-        return;
-    }
-    let pivot_index = partition(array, left, right);
-    sort(array, left, pivot_index - 1);
-    sort(array, pivot_index + 1, right);
-}
-fn partition<T: Ord>(array: &mut [T], left: usize, right: usize) -> usize {
-    let pivot = &array[right];
-    let mut i = left;
-    for j in left..right {
-        if &array[j] < pivot {
-            array.swap(i, j);
-            i += 1;
+    for i in 1..array.len() {
+        let mut j = i;
+        while j > 0 && array[j] < array[j - 1] {
+            array.swap(j, j - 1);
+            j -= 1;
         }
     }
-    array.swap(i, right);
-    i
 }
 #[cfg(test)]
 mod tests {
