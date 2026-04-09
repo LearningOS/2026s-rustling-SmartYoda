@@ -2,8 +2,6 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
-
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
 use std::vec::*;
@@ -69,15 +67,41 @@ impl<T> LinkedList<T> {
             },
         }
     }
-	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
-	{
-		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+    pub fn merge(list_a: LinkedList<T>, list_b: LinkedList<T>) -> Self
+    where
+        T: Ord + Clone,
+    {
+        let mut merged = Self::new();
+        let mut left = list_a.start;
+        let mut right = list_b.start;
+
+        while let (Some(left_ptr), Some(right_ptr)) = (left, right) {
+            let left_node = unsafe { left_ptr.as_ref() };
+            let right_node = unsafe { right_ptr.as_ref() };
+
+            if left_node.val <= right_node.val {
+                merged.add(left_node.val.clone());
+                left = left_node.next;
+            } else {
+                merged.add(right_node.val.clone());
+                right = right_node.next;
+            }
         }
-	}
+
+        while let Some(node_ptr) = left {
+            let node = unsafe { node_ptr.as_ref() };
+            merged.add(node.val.clone());
+            left = node.next;
+        }
+
+        while let Some(node_ptr) = right {
+            let node = unsafe { node_ptr.as_ref() };
+            merged.add(node.val.clone());
+            right = node.next;
+        }
+
+        merged
+    }
 }
 
 impl<T> Display for LinkedList<T>
